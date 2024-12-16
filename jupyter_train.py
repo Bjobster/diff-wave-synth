@@ -12,7 +12,7 @@ from nnAudio import Spectrogram
 import os
 import datetime
 from torch.utils.tensorboard import SummaryWriter
-import matplotlib.pyplot as plt
+import math
 
 def run_training(epochs: int = None):
     """
@@ -85,7 +85,7 @@ def run_training(epochs: int = None):
 
     train_summary_writer = SummaryWriter(train_log_dir)
     
-    interval_value = int(epochs/2)
+    interval_value = max(1, math.ceil(epochs / 2))
     print(f"Starte training for {epochs} epochs")
     
     idx = 0
