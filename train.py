@@ -1,7 +1,7 @@
 """
 Train script.
 """
-import numpy as np
+# import numpy as np
 from core import multiscale_fft, get_scheduler
 import torch
 import yaml 
@@ -9,9 +9,11 @@ from dataloader import get_data_loader
 from tqdm import tqdm
 from model import WTS
 from nnAudio import Spectrogram
+import os
 import datetime
-from tensorboardX import SummaryWriter
-import matplotlib.pyplot as plt
+#rom tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
+# import matplotlib.pyplot as plt
 
 with open("config.yaml", 'r') as stream:
     config = yaml.safe_load(stream)
@@ -72,10 +74,11 @@ schedule = get_scheduler(
 
 # define tensorboard writer
 current_time = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-train_log_dir = 'logs/' + current_time +'/train'
+train_log_dir = os.path.join('logs', current_time, 'train')
 
 train_summary_writer = SummaryWriter(train_log_dir)
 
+print(f"Starte training for {epochs} epochs")
 idx = 0
 for ep in tqdm(range(1, epochs + 1)):
     for y, loudness, pitch in tqdm(train_dl):
@@ -113,8 +116,8 @@ for ep in tqdm(range(1, epochs + 1)):
         opt.step()
 
         train_summary_writer.add_scalar('loss', loss.item(), global_step=idx)
-        if idx % 500 == 0:
-            torch.save(model.state_dict(), "model.pt")
+        if idx % 50 == 0:
+            torch.save(model.state_dict(), "model.pt") # save interval: TODO: old 500
         
         idx += 1
         
