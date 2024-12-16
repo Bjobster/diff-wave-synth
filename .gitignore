@@ -12,3 +12,4 @@ test.gv.pdf
 !test_audio/*.wav
 !img/*.png
 config.yaml
+keys_*.txt
